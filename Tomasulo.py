@@ -74,19 +74,48 @@ class TomasuloSimulator:
             pass  # Implement DIV execution logic
 
     def write(self, inst):
-        # Write result to register or memory
-        pass  # Implement write logic
+        opcode = inst.opcode
+        operands = inst.operands
+
+        if opcode in ["LOAD", "ADD", "ADDI", "NAND", "DIV"]:
+            # Write result to register
+            destination_register = operands[0]
+            result = self.reservation_stations[self.find_station_by_destination(destination_register)].vj
+            self.registers[int(destination_register[1])] = result
+            # Update reservation station and register status
+            station_idx = self.find_station_by_destination(destination_register)
+            self.reservation_stations[station_idx].busy = False
+            self.reservation_stations[station_idx].op = None
+            self.reservation_stations[station_idx].vj = None
+            self.reservation_stations[station_idx].vk = None
+            self.reservation_stations[station_idx].qj = None
+            self.reservation_stations[station_idx].qk = None
+            self.reservation_stations[station_idx].destination = None
+        elif opcode == "STORE":
+            # No need to perform write for STORE operation as the store was done in execute method
+            pass
+        elif opcode == "BNE":
+            # No write needed for branch instructions
+            pass
+        elif opcode in ["CALL", "RET"]:
+            # No write needed for call and return instructions
+            pass
 
     def simulate(self):
-        while any([inst.issue == 0 for inst in self.instructions]):
-            issued_inst = self.issue()
-            if issued_inst:
-                self.execute(issued_inst)
-                self.write(issued_inst)
-            self.clock_cycles += 1
+            while any([inst.issue == 0 for inst in self.instructions]):
+                # Issue instructions
+                issued_inst = self.issue()
+                if issued_inst:
+                    self.execute(issued_inst)
+                    self.write(issued_inst)
 
-        # Calculate performance metrics and display output
-        # Implement performance metrics calculation and display logic
+                # Increment clock cycle after each cycle
+                self.clock_cycles += 1
+
+            # Calculate performance metrics
+            total_instructions = len(self.instructions)
+            execution_time = self.clock_cycles
+            ipc = total_instructions / execution_time if execution_time > 0 else 0
 
 
 # Example usage:
