@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tomasulo Simulator - Results</title>
+    <!-- You can link your CSS files for styling here -->
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulation Results</h1>
+    <h2>Performance Metrics:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Instruction</th>
+                <th>Issue Cycle</th>
+                <th>Execution Start Cycle</th>
+                <th>Execution Finish Cycle</th>
+                <th>Write Cycle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Here you can use Jinja templating to loop through metrics and display them -->
+            {% for instruction, cycles in metrics.items() %}
+                <tr>
+                    <td>{{ instruction }}</td>
+                    <td>{{ cycles.issue }}</td>
+                    <td>{{ cycles.start_exec }}</td>
+                    <td>{{ cycles.finish_exec }}</td>
+                    <td>{{ cycles.write }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- Display other metrics like total execution time, IPC, branch misprediction percentage -->
+</body>
+</html>
